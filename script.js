@@ -2,6 +2,28 @@
 // E-Stocks App (front-end only)
 // ===============================
 
+//Market Config (stored in localStorage)=====
+function loadMarketConfig() {
+  const saved = localStorage.getItem("marketConfig");
+  if (saved) {
+    return JSON.parse(saved);
+  }
+
+  // default values if nothing saved yet
+  const defaultConfig = {
+    openTime: "09:30",
+    closeTime: "16:00",
+    openDays: ["Mon", "Tue", "Wed", "Thu", "Fri"]
+  };
+
+  localStorage.setItem("marketConfig", JSON.stringify(defaultConfig));
+  return defaultConfig;
+}
+
+function saveMarketConfig(config) {
+  localStorage.setItem("marketConfig", JSON.stringify(config));
+}
+
 // ---------- Auth nav toggle ----------
 function hydrateAuthNav(){
   const loggedIn = !!localStorage.getItem('role');
