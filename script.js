@@ -130,8 +130,10 @@ function renderTransactions() {
   const txs = loadTransactions();
   const user = localStorage.getItem('currentUser');
 
-  // Only this user's trades
-  const mine = txs.filter(tx => tx.user === user) : txs;
+  // If we have a user, filter to them; if not, show everything
+  const mine = user
+    ? txs.filter(tx => tx.user === user)
+    : txs;
 
   // Newest first
   mine.sort((a, b) => b.ts - a.ts);
