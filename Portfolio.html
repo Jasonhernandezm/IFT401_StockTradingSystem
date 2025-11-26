@@ -35,7 +35,7 @@
       <!-- Role -->
       <div id="roleChip" class="role-chip">Role: Guest</div>
 
-      <!-- NEW: Balance chip + toggle -->
+      <!-- Balance chip + toggle -->
       <div style="height:10px"></div>
       <div style="display:flex; gap:8px; align-items:center;">
         <div id="balanceChip" class="role-chip">Balance: ••••</div>
@@ -94,6 +94,32 @@
           <tbody></tbody>
         </table>
       </div>
+    </div>
+  </section>
+
+      <div class="card"
+           style="margin-top:20px;padding:14px;border:1px solid rgba(255,255,255,0.18);
+                  background:rgba(255,255,255,0.06);border-radius:14px;">
+        <h3>Transaction History</h3>
+        <p style="opacity:.9;margin-bottom:8px;">Most recent trades for this account.</p>
+
+        <table id="txTable" cellpadding="10"
+               style="width:100%;margin-top:8px;border-collapse:collapse;">
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Type</th>
+              <th>Ticker</th>
+              <th>Qty</th>
+              <th>Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Filled by script.js -->
+          </tbody>
+        </table>
+      </div>
+
     </div>
   </section>
 
