@@ -5,11 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>E-Stocks · Admin</title>
 
-  <!-- Styles -->
+  <!-- Main styles -->
   <link rel="stylesheet" href="style.css" />
+
+  <!-- Optional: same Font Awesome as Login page -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.6.0/css/all.min.css"
+  />
 </head>
 <body>
   <section class="header">
+    <!-- ===== NAVBAR ===== -->
     <nav>
       <h3 class="brand">E-Stocks</h3>
       <div class="nav-links" id="navLinks">
@@ -19,7 +26,7 @@
           <li><a href="Market.html">MARKET</a></li>
           <li><a href="Portfolio.html">PORTFOLIO</a></li>
 
-          <!-- Only show ADMIN link for admin users -->
+          <!-- ADMIN link is only shown for admins by script.js / admin.js -->
           <li><a href="Admin.html" id="adminLink" style="display:none;">ADMIN</a></li>
 
           <li><a href="Login.html" id="navLogin">LOGIN</a></li>
@@ -28,49 +35,119 @@
       </div>
     </nav>
 
+    <!-- ===== MAIN ADMIN CONTENT ===== -->
     <div style="padding: 20px 6%; position:relative; z-index:1;">
+      <!-- Role chip (script.js sets text to 'Role: Admin' etc.) -->
       <h2 class="role-chip" id="roleChip">Role: Guest</h2>
 
+      <!-- ==== Manage Market Tickers ==== -->
       <div class="card"
            style="margin-top:20px;padding:14px;border:1px solid rgba(255,255,255,0.18);
                   background:rgba(255,255,255,0.06);border-radius:14px;">
         <h3>Manage Market Tickers</h3>
-        <div style="display:flex;gap:8px;margin-top:12px;">
-          <input id="admTicker" placeholder="Ticker (AAPL)" 
+        <p style="opacity:.9;margin-bottom:8px;">Add or remove stock tickers in the market list.</p>
+
+        <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
+          <input id="admTicker" placeholder="Ticker (AAPL)"
                  style="flex:1;min-width:160px;padding:10px;border-radius:10px;
-                 border:1px solid rgba(255,255,255,0.18);
-                 background:rgba(255,255,255,0.06);color:#fff;">
-          <button class="btn" onclick="adminAddTicker()"
-                  style="border:none;border-radius:12px;padding:10px 14px;">Add</button>
+                        border:1px solid rgba(255,255,255,0.18);
+                        background:rgba(255,255,255,0.06);color:#fff;">
+          <button class="btn" type="button" onclick="adminAddTicker()"
+                  style="border:none;border-radius:12px;padding:10px 14px;">
+            Add Ticker
+          </button>
         </div>
 
         <table id="admMarketTable" cellpadding="10"
                style="width:100%;margin-top:16px;border-collapse:collapse;">
           <thead>
-            <tr><th>Ticker</th><th>Price</th><th>Remove</th></tr>
+            <tr>
+              <th>Ticker</th>
+              <th>Price</th>
+              <th>Actions</th>
+            </tr>
           </thead>
-          <tbody></tbody>
+          <tbody>
+            <!-- Filled by renderAdminMarket() in admin.js -->
+          </tbody>
         </table>
       </div>
 
+      <!-- ==== User Accounts ==== -->
       <div class="card"
            style="margin-top:20px;padding:14px;border:1px solid rgba(255,255,255,0.18);
                   background:rgba(255,255,255,0.06);border-radius:14px;">
         <h3>User Accounts</h3>
+        <p style="opacity:.9;margin-bottom:8px;">Read-only list of registered users.</p>
 
         <table id="admUserTable" cellpadding="10"
                style="width:100%;margin-top:16px;border-collapse:collapse;">
           <thead>
-            <tr><th>Username</th><th>Role</th><th>Password</th></tr>
+            <tr>
+              <th>Username</th>
+              <th>Role</th>
+              <th>Password</th>
+            </tr>
           </thead>
-          <tbody></tbody>
+          <tbody>
+            <!-- Filled by renderAdminUsers() in admin.js -->
+          </tbody>
         </table>
       </div>
 
-    </div>
+      <!-- ==== Market Hours ==== -->
+      <div class="card"
+           style="margin-top:20px;padding:14px;border:1px solid rgba(255,255,255,0.18);
+                  background:rgba(255,255,255,0.06);border-radius:14px;">
+        <h3>Market Hours</h3>
+        <p style="opacity:.9;margin-bottom:8px;">Set the daily open and close time for the market.</p>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+          <label>
+            Open:
+            <input type="time" id="cfgOpenTime">
+          </label>
+          <label>
+            Close:
+            <input type="time" id="cfgCloseTime">
+          </label>
+          <button class="btn" type="button" onclick="saveMarketHours()"
+                  style="border:none;border-radius:10px;padding:8px 12px;">
+            Save Hours
+          </button>
+        </div>
+        <div id="hoursSavedMsg" style="margin-top:6px;font-size:0.9rem;opacity:.9;"></div>
+      </div>
+
+      <!-- ==== Market Schedule (Days Open) ==== -->
+      <div class="card"
+           style="margin-top:20px;padding:14px;border:1px solid rgba(255,255,255,0.18);
+                  background:rgba(255,255,255,0.06);border-radius:14px;">
+        <h3>Market Schedule</h3>
+        <p style="opacity:.9;margin-bottom:8px;">Select which days the market is open.</p>
+
+        <div class="day-checks" style="display:flex;flex-wrap:wrap;gap:10px;">
+          <label><input type="checkbox" value="Mon" id="dayMon"> Mon</label>
+          <label><input type="checkbox" value="Tue" id="dayTue"> Tue</label>
+          <label><input type="checkbox" value="Wed" id="dayWed"> Wed</label>
+          <label><input type="checkbox" value="Thu" id="dayThu"> Thu</label>
+          <label><input type="checkbox" value="Fri" id="dayFri"> Fri</label>
+          <label><input type="checkbox" value="Sat" id="daySat"> Sat</label>
+          <label><input type="checkbox" value="Sun" id="daySun"> Sun</label>
+        </div>
+
+        <button class="btn" type="button" onclick="saveMarketSchedule()"
+                style="border:none;border-radius:10px;padding:8px 12px;margin-top:10px;">
+          Save Schedule
+        </button>
+        <div id="scheduleSavedMsg" style="margin-top:6px;font-size:0.9rem;opacity:.9;"></div>
+      </div>
+
+    </div> <!-- end main admin content -->
 
   </section>
 
+  <!-- Scripts: main logic first, then admin-specific logic -->
   <script src="script.js"></script>
   <script src="admin.js"></script>
 </body>
