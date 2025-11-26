@@ -116,7 +116,42 @@ function hydratePortfolio(){
       tbody.appendChild(tr);
     });
   }
-  renderBalanceChip(); // keep balance chip synced (NEW)
+  renderBalanceChip(); // keep balance chip synced
+  renderTransactions();
+}
+
+// ===============================
+// Transaction History Rendering
+// ===============================
+function renderTransactions() {
+  const body = document.querySelector('#txTable tbody');
+  if (!body) return;
+
+  const txs = loadTransactions();
+  const user = localStorage.getItem('currentUser');
+
+  // Only this user's trades
+  const mine = txs.filter(tx => tx.user === user);
+
+  // Newest first
+  mine.sort((a, b) => b.ts - a.ts);
+
+  body.innerHTML = '';
+
+  mine.forEach(tx => {
+    const tr = document.createElement('tr');
+    const time = new Date(tx.ts).toLocaleString();
+
+    tr.innerHTML = `
+      <td>${time}</td>
+      <td>${tx.type}</td>
+      <td>${tx.ticker}</td>
+      <td>${tx.qty}</td>
+      <td>$${tx.price.toFixed(2)}</td>
+    `;
+
+    body.appendChild(tr);
+  });
 }
 
 // ---------- Portfolio actions ----------
