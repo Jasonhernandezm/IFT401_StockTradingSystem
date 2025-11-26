@@ -131,7 +131,7 @@ function renderTransactions() {
   const user = localStorage.getItem('currentUser');
 
   // Only this user's trades
-  const mine = txs.filter(tx => tx.user === user);
+  const mine = txs.filter(tx => tx.user === user) : txs;
 
   // Newest first
   mine.sort((a, b) => b.ts - a.ts);
