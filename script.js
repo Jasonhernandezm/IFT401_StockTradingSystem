@@ -139,7 +139,9 @@ window.buy = function(){
   if (cost > state.cash){ if(msg) msg.textContent = 'Insufficient cash'; return; }
   state.cash -= cost;
   state.positions[t] = (state.positions[t] || 0) + q;
-  save(); hydratePortfolio();
+  save(); 
+  recordTransaction('BUY', t, q, price);
+  hydratePortfolio();
   renderBalanceChip(); // NEW
   if (msg) msg.textContent = `Bought ${q} ${t} @ $${price}`;
 };
@@ -153,7 +155,10 @@ window.sell = function(){
   if (q > held){ if(msg) msg.textContent = 'Insufficient holdings'; return; }
   const price = 100, proceeds = q * price;
   state.positions[t] = held - q; if (state.positions[t] === 0) delete state.positions[t];
-  state.cash += proceeds; save(); hydratePortfolio();
+  state.cash += proceeds; 
+  save(); 
+  recordTransaction('SELL', t, q, price);
+  hydratePortfolio();
   renderBalanceChip(); // NEW
   if (msg) msg.textContent = `Sold ${q} ${t} @ $${price}`;
 };
