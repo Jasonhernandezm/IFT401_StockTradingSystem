@@ -75,15 +75,43 @@ function hydrateRole(){
 }
 
 // ---------- Portfolio state ----------
+
+// Safely load positions (prevents JSON parse crashes)
+function safeLoadPositions() {
+  const raw = localStorage.getItem('positions');
+
+  if (!raw) {
+    return { AAPL: 3, MSFT: 2 }; // default portfolio
+  }
+
+  try {
+    const parsed = JSON.parse(raw);
+    if (parsed && typeof parsed === 'object') {
+      return parsed;
+    }
+  } catch (e) {
+    // If parsing fails, fall through to reset
+  }
+
+  // Reset to default if corrupted or invalid
+  const fallback = { AAPL: 3, MSFT: 2 };
+  localStorage.setItem('positions', JSON.stringify(fallback));
+  return fallback;
+}
+
 const state = {
   cash: parseFloat(localStorage.getItem('cash') || '10000'),
-  positions: JSON.parse(localStorage.getItem('positions') || '{"AAPL":3,"MSFT":2}')
+  positions: safeLoadPositions()
 };
-function save(){
+
+function save() {
   localStorage.setItem('cash', String(state.cash));
   localStorage.setItem('positions', JSON.stringify(state.positions));
 }
-function fmt(n){ return '$' + Number(n).toFixed(2); }
+
+function fmt(n) {
+  return '$' + Number(n).toFixed(2);
+}
 
 // ---------- Balance visibility (NEW) ----------
 function getShowBalance(){ return localStorage.getItem('showBalance') === 'true'; }
