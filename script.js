@@ -2,7 +2,7 @@
 // E-Stocks App (front-end only)
 // ===============================
 
-//Market Config (stored in localStorage)=====
+// Market Config (stored in localStorage)
 function loadMarketConfig() {
   const saved = localStorage.getItem("marketConfig");
   if (saved) {
@@ -22,6 +22,33 @@ function loadMarketConfig() {
 
 function saveMarketConfig(config) {
   localStorage.setItem("marketConfig", JSON.stringify(config));
+}
+
+// Transaction history (per user)
+function loadTransactions() {
+  try {
+    return JSON.parse(localStorage.getItem('transactions') || '[]');
+  } catch {
+    return [];
+  }
+}
+
+function saveTransactions(txs) {
+  localStorage.setItem('transactions', JSON.stringify(txs));
+}
+
+function recordTransaction(type, ticker, qty, price) {
+  const txs = loadTransactions();
+  const user = localStorage.getItem('currentUser') || 'unknown';
+  txs.push({
+    user,
+    type,        // BUY or SELL
+    ticker,
+    qty,
+    price,
+    ts: Date.now()   // timestamp
+  });
+  saveTransactions(txs);
 }
 
 // ---------- Auth nav toggle ----------
@@ -189,11 +216,13 @@ function attachLogin(){
         return;
       }
       localStorage.setItem('role', users[user].role || (user.toLowerCase()==='admin' ? 'Admin' : 'Customer'));
+      localStorage.setItem('currentUser', user);
     } else {
       // First-time user becomes Customer (or Admin if username is "admin")
       users[user] = { password: pass, role: (user.toLowerCase()==='admin' ? 'Admin' : 'Customer') };
       saveUsers(users);
       localStorage.setItem('role', users[user].role);
+      localStorage.setItem('currentUser', user);
     }
 
     if (msg) msg.textContent = '';
