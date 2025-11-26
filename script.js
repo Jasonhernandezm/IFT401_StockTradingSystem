@@ -198,7 +198,13 @@ function attachLogin(){
 
     if (msg) msg.textContent = '';
     hydrateAuthNav();               // toggle nav immediately
-    window.location.href = 'Portfolio.html';
+
+    const role = localStorage.getItem('role');
+    if (role === 'Admin') {
+      window.location.href = 'Admin.html';
+    } else {
+      window.location.href = 'Portfolio.html';
+    }
   });
 }
 
