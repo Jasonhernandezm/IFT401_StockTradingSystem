@@ -255,13 +255,13 @@ function attachLogin(){
 // Market Page Logic
 // ===============================
 (function () {
-  const SAMPLE = [
-    { t: 'AAPL', p: 183.12 },
-    { t: 'MSFT', p: 412.33 },
-    { t: 'NVDA', p: 117.84 },
-    { t: 'AMZN', p: 175.05 },
-    { t: 'TSLA', p: 198.10 }
-  ];
+const SAMPLE = [
+  { t: 'AAPL', p: 183.12, h: 183.12, l: 183.12 },
+  { t: 'MSFT', p: 412.33, h: 412.33, l: 412.33 },
+  { t: 'NVDA', p: 117.84, h: 117.84, l: 117.84 },
+  { t: 'AMZN', p: 175.05, h: 175.05, l: 175.05 },
+  { t: 'TSLA', p: 198.10, h: 198.10, l: 198.10 }
+];
 
   function loadMarket() {
     try { return JSON.parse(localStorage.getItem('marketData') || '[]'); }
@@ -279,10 +279,14 @@ function attachLogin(){
     rows.forEach((row, idx) => {
       const price = Number(row.p);
       const ch = (row.c ?? 0);
+      const high = Number(row.h ?? row.p);
+      const low  = Number(row.l ?? row.p);
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td>${row.t}</td>
         <td>$${price.toFixed(2)}</td>
+        <td>$${high.toFixed(2)}</td>
+        <td>$${low.toFixed(2)}</td>
         <td style="color:${ch>=0?'#7CFFB2':'#FF9B9B'}">${ch>=0?'+':''}${ch.toFixed(2)}%</td>
         <td>
           <button class="btn" style="border:none;border-radius:10px;padding:6px 10px"
