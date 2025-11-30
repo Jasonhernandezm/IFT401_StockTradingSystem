@@ -472,3 +472,6 @@ document.addEventListener('DOMContentLoaded', function(){
   hydratePortfolio();     // Portfolio page (calls renderBalanceChip)
   hydrateAuthNav();       // Toggle LOGIN/LOG OUT
 });
+
+// AUTO-UPDATE MARKET EVERY 5 SECONDS
+setInterval(refreshMarketPrices, 5000);
